@@ -16,4 +16,4 @@ functions:
     events:
       - httpApi:
           method: GET
-          path: hello
+          path: /hello
