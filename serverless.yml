@@ -8,6 +8,7 @@ provider:
   name: aws
   region: ap-northeast-1
   runtime: nodejs16.x
+  memorySize: 128
 
 functions:
   hello:
