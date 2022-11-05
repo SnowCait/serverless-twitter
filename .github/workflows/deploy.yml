@@ -21,6 +21,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - run: npm install -g serverless
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::869192426624:role/GitHubActionsOIDC
