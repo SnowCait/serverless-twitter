@@ -27,3 +27,5 @@ jobs:
           role-to-assume: arn:aws:iam::869192426624:role/GitHubActionsOIDC
           aws-region: ap-northeast-1
       - run: serverless deploy
+        env:
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
