@@ -39,3 +39,56 @@ resources:
         GenerateSecret: false
         UserPoolId:
           Ref: CognitoUserPool
+    # Cognito Identity Pool
+    CognitoUserIdentityPool:
+      Type: AWS::Cognito::IdentityPool
+      Properties:
+        AllowUnauthenticatedIdentities: false
+        CognitoIdentityProviders:
+          - ClientId:
+              Ref: CognitoUserPoolClient
+            ProviderName:
+              Fn::GetAtt: [ CognitoUserPool, ProviderName ]
+    CognitoUserIdentityPoolRoleAttachment:
+      Type: AWS::Cognito::IdentityPoolRoleAttachment
+      Properties:
+        IdentityPoolId:
+          Ref: CognitoUserIdentityPool
+        Roles:
+          authenticated:
+            Fn::GetAtt: [ CognitoUserAuthRole, Arn ]
+    # IAM Roles
+    CognitoUserAuthRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /
+        AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Principal:
+                Federated: cognito-identity.amazonaws.com
+              Action:
+                - sts:AssumeRoleWithWebIdentity
+              Condition:
+                StringEquals:
+                  cognito-identity.amazonaws.com:aud: CognitoUserIdentityPool
+                ForAnyValue:StringLike:
+                  cognito-identity.amazonaws.com:amr: authenticated
+          Policies:
+            - PolicyName: CognitoAuthorizedPolicy
+              PolicyDocument:
+                Version: 2012-10-27
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - mobileanalytics:PutEvents
+                      - cognito-sync:*
+                      - cognito-identity:*
+                    Resource:
+                      - '*'
+                  - Effect: Allow
+                    Action:
+                      - execute-api:Invoke
+                    Resource:
+                      - arn:aws:execute-api:${aws:region}:${aws:accountId}:${sls:stage}-ApiGatewayRestApiId/*/GET/hello
