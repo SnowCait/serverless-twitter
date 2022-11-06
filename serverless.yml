@@ -17,3 +17,24 @@ functions:
       - httpApi:
           method: GET
           path: /hello
+
+resources:
+  Resources:
+    # Cognito User Pool
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:service}-CognitoUserPool-${sls:stage}
+        AutoVerifiedAttributes:
+          - email
+        UsernameAttributes:
+          - email
+        MfaConfiguration: OFF
+        EmailConfiguration:
+          EmailSendingAccount: COGNITO_DEFAULT
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:service}-CognitoUserPoolClient-${sls:stage}
+        GenerateSecret: false
+        UserPoolId: CognitoUserPool
