@@ -92,4 +92,4 @@ resources:
                     Action:
                       - execute-api:Invoke
                     Resource:
-                      - Fn::GetAtt: [ helloLambdaFunction, Arn ]
+                      - '!GetAtt helloLambdaFunction.Arn'
