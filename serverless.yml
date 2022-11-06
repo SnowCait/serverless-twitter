@@ -72,7 +72,8 @@ resources:
                 - sts:AssumeRoleWithWebIdentity
               Condition:
                 StringEquals:
-                  cognito-identity.amazonaws.com:aud: CognitoUserIdentityPool
+                  cognito-identity.amazonaws.com:aud:
+                    Ref: CognitoUserIdentityPool
                 ForAnyValue:StringLike:
                   cognito-identity.amazonaws.com:amr: authenticated
           Policies:
