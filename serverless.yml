@@ -88,8 +88,8 @@ resources:
                       - cognito-identity:*
                     Resource:
                       - '*'
-                  - Effect: Allow
-                    Action:
-                      - execute-api:Invoke
-                    Resource:
-                      - arn:aws:execute-api:${aws:region}:${aws:accountId}:${sls:stage}-ApiGatewayRestApiId/*/GET/hello
+                  # - Effect: Allow
+                  #   Action:
+                  #     - execute-api:Invoke
+                  #   Resource:
+                  #     - arn:aws:execute-api:${aws:region}:${aws:accountId}:${sls:stage}-ApiGatewayRestApiId/*/GET/hello
