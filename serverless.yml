@@ -37,4 +37,5 @@ resources:
       Properties:
         ClientName: ${self:service}-CognitoUserPoolClient-${sls:stage}
         GenerateSecret: false
-        UserPoolId: CognitoUserPool
+        UserPoolId:
+          Ref: CognitoUserPool
