@@ -33,7 +33,7 @@ module.exports.auth = async (event, context, callback) => {
 
     const url = 'https://api.twitter.com/2/oauth2/token';
     const clientId = 'NnduMzZ5bnk4T1RfT21BdkJlZUg6MTpjaQ';
-    const clientSecret = response.SecretString;
+    const { TWITTER_CLIENT_SECRET: clientSecret } = JSON.parse(response.SecretString);
     const redirectUrl = 'http://localhost/';
     const request = await https.request(url, {
       method: 'POST',
@@ -42,7 +42,6 @@ module.exports.auth = async (event, context, callback) => {
         'Content-Type': 'application/json',
       },
     }, response => {
-      console.log('[access token]', response);
       response.setEncoding('utf8');
       response.on('data', chunk => {
         console.log('[data]', chunk);
