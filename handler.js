@@ -43,7 +43,10 @@ module.exports.auth = async event => {
       response.setEncoding('utf8');
       response.on('data', data => {
         console.log('[data]', data);
-        resolve(data);
+        resolve({
+          statusCode: 200,
+          body: data,
+        });
       });
       response.on('end', () => {
         console.log('[end]');
