@@ -9,6 +9,14 @@ provider:
   region: ap-northeast-1
   runtime: nodejs16.x
   memorySize: 128
+  iam:
+    role:
+      Statement:
+        - Effect: Allow
+          Action:
+            - secretsmanager:GetSecretValue
+          Resource:
+            - '*'
 
 functions:
   hello:
@@ -17,6 +25,12 @@ functions:
       - httpApi:
           method: GET
           path: /hello
+  auth:
+    handler: handler.auth
+    events:
+      - httpApi:
+          method: POST
+          path: /auth
 
 resources:
   Resources:
