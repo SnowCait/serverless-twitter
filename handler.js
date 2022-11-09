@@ -1,10 +1,7 @@
 'use strict';
 
-import * as https from 'https';
-import {
-  SecretsManagerClient,
-  GetSecretValueCommand,
-} from "@aws-sdk/client-secrets-manager";
+const https = require('https');
+const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
 
 module.exports.hello = async (event) => {
   return {
