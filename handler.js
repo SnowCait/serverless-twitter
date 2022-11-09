@@ -20,7 +20,7 @@ module.exports.hello = async (event) => {
   };
 };
 
-module.exports.auth = async (event, context, callback) => {
+module.exports.auth = async event => {
   return new Promise(async (resolve, reject) => {
     const { code, verifier } = JSON.parse(event.body);
     console.log('[params]', code, verifier);
@@ -43,11 +43,15 @@ module.exports.auth = async (event, context, callback) => {
       },
     }, response => {
       response.setEncoding('utf8');
-      response.on('data', chunk => {
-        console.log('[data]', chunk);
-        resolve(chunk);
+      response.on('data', data => {
+        console.log('[data]', data);
+        resolve(data);
+      });
+      response.on('end', () => {
+        console.log('[end]');
       });
     }).on('error', error => {
+      console.log('[error]', error);
       reject(Error(error));
     });
 
