@@ -21,6 +21,8 @@ module.exports.hello = async (event) => {
 };
 
 module.exports.auth = async (event, context, callback) => {
+  const { code, verifier } = JSON.parse(event.body);
+
   const secret_name = "TwitterClientSecret";
 
   const client = new SecretsManagerClient({
@@ -43,7 +45,9 @@ module.exports.auth = async (event, context, callback) => {
   }
 
   const url = 'https://api.twitter.com/2/oauth2/token';
+  const clientId = 'NnduMzZ5bnk4T1RfT21BdkJlZUg6MTpjaQ';
   const clientSecret = response.SecretString;
+  const redirectUrl = 'http://localhost/';
   const request = await https.request(url, {
     method: 'POST',
     headers: {
