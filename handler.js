@@ -1,7 +1,10 @@
 'use strict';
 
 const https = require('https');
-const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
+const AWS = require('aws-sdk');
+const secretsManager = new AWS.SecretsManager({
+  region: 'ap-northeast-1',
+});
 
 module.exports.hello = async (event) => {
   return {
@@ -21,25 +24,9 @@ module.exports.auth = async (event, context, callback) => {
   const { code, verifier } = JSON.parse(event.body);
 
   const secret_name = "TwitterClientSecret";
-
-  const client = new SecretsManagerClient({
-    region: "ap-northeast-1",
-  });
-
-  let response;
-
-  try {
-    response = await client.send(
-      new GetSecretValueCommand({
-        SecretId: secret_name,
-        VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
-      })
-    );
-  } catch (error) {
-    // For a list of exceptions thrown, see
-    // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-    throw error;
-  }
+  const response = await secretsManager.getSecretValue({
+    SecretId: secret_name,
+  }).promise();
 
   const url = 'https://api.twitter.com/2/oauth2/token';
   const clientId = 'NnduMzZ5bnk4T1RfT21BdkJlZUg6MTpjaQ';
