@@ -11,7 +11,7 @@ provider:
   memorySize: 128
   iam:
     role:
-      Statement:
+      statements:
         - Effect: Allow
           Action:
             - secretsmanager:GetSecretValue
