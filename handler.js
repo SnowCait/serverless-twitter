@@ -39,16 +39,16 @@ module.exports.auth = async event => {
         'Authorization': 'Basic ' + Buffer.from(`${clientId}:${clientSecret}`).toString('base64'),
         'Content-Type': 'application/json',
       },
-    }, response => {
-      response.setEncoding('utf8');
-      response.on('data', data => {
-        console.log('[data]', data);
+    }, res => {
+      res.setEncoding('utf8');
+      res.on('data', data => {
+        console.log('[data]', data, typeof data);
         resolve({
           statusCode: 200,
           body: data,
         });
       });
-      response.on('end', () => {
+      res.on('end', () => {
         console.log('[end]');
       });
     }).on('error', error => {
