@@ -24,7 +24,7 @@ functions:
     handler: handler.hello
     events:
       - http:
-          method: GET
+          method: POST
           path: /hello
           cors: true
   auth:
