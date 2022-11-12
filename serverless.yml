@@ -26,7 +26,14 @@ functions:
       - httpApi:
           method: GET
           path: /hello
-          cors: true
+          cors:
+            allowedOrigins:
+              - http://localhost
+            allowedHeaders:
+              - Contet-Type
+              - Authorization
+            allowedMethods:
+              - GET
       - httpApi:
           method: POST
           path: /hello
