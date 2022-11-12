@@ -34,10 +34,6 @@ functions:
               - Authorization
             allowedMethods:
               - GET
-      - httpApi:
-          method: POST
-          path: /hello
-          cors: true
   auth:
     handler: handler.auth
     events:
