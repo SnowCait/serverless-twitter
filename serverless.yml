@@ -26,12 +26,11 @@ functions:
       - httpApi:
           method: GET
           path: /hello
-  post:
-    handler: handler.hello
-    events:
+          cors: true
       - httpApi:
           method: POST
           path: /hello
+          cors: true
   auth:
     handler: handler.auth
     events:
