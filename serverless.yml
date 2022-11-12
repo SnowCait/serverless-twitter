@@ -24,6 +24,12 @@ functions:
     handler: handler.hello
     events:
       - httpApi:
+          method: GET
+          path: /hello
+  post:
+    handler: handler.hello
+    events:
+      - httpApi:
           method: POST
           path: /hello
   auth:
