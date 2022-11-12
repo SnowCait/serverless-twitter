@@ -10,6 +10,8 @@ provider:
   runtime: nodejs16.x
   memorySize: 128
   architecture: arm64
+  httpApi:
+    cors: true
   iam:
     role:
       statements:
@@ -23,10 +25,9 @@ functions:
   hello:
     handler: handler.hello
     events:
-      - http:
+      - httpApi:
           method: POST
           path: /hello
-          cors: true
   auth:
     handler: handler.auth
     events:
