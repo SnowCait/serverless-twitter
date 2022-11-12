@@ -23,17 +23,10 @@ functions:
   hello:
     handler: handler.hello
     events:
-      - httpApi:
+      - http:
           method: GET
           path: /hello
-          cors:
-            allowedOrigins:
-              - http://localhost
-            allowedHeaders:
-              - Contet-Type
-              - Authorization
-            allowedMethods:
-              - GET
+          cors: true
   auth:
     handler: handler.auth
     events:
