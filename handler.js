@@ -9,7 +9,7 @@ const secretsManager = new AWS.SecretsManager({
 module.exports.hello = async (event) => {
   console.log(event);
   console.log(process.versions);
-  console.log(process);
+  console.log(process.moduleLoadList);
   return {
     statusCode: 200,
     body: JSON.stringify(
