@@ -32,7 +32,7 @@ functions:
     handler: handler.auth
     events:
       - httpApi:
-          method: POST
+          method: GET
           path: /auth
 
 # resources:
