@@ -8,6 +8,8 @@ const secretsManager = new AWS.SecretsManager({
 });
 
 module.exports.hello = async (event) => {
+  console.log(event);
+  console.log(process.versions);
   return {
     statusCode: 200,
     body: JSON.stringify(
