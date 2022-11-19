@@ -10,6 +10,8 @@ const dynamoDB = new DynamoDBClient({ region });
 const db = DynamoDBDocumentClient.from(dynamoDB);
 
 module.exports.auth = async event => {
+  console.log('[event]', event);
+
   const { code, verifier, redirectUrl } = JSON.parse(event.body);
 
   const getSecretValueCommand = new GetSecretValueCommand({ SecretId: 'TwitterClientSecret' });
@@ -63,6 +65,8 @@ module.exports.auth = async event => {
 };
 
 module.exports.tweet = async event => {
+  console.log('[event]', event);
+
   const { userId, accessToken, text } = JSON.parse(event.body);
 
   const user = await db.send(new GetCommand({
