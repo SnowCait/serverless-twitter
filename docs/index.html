@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Serverless Twitter</title>
+    <script defer>
+      const clientId = 'NnduMzZ5bnk4T1RfT21BdkJlZUg6MTpjaQ';
+      const redirectUrl = 'http://localhost/';
+      const state = randomString(10);
+      const verifier = randomString(43);
+      console.log('[verifier]', verifier);
+
+      window.addEventListener('DOMContentLoaded', async event => {
+        console.log('[DOMContentLoaded]')
+        const params = new URLSearchParams(location.search);
+        const newState = params.get('state');
+        const code = params.get('code');
+        if (newState && code) {
+          console.log('[params]', newState, code);
+
+          const [ savedState, savedVerifier ] = document.cookie.split('&');
+          console.log('[cookie]', document.cookie, savedState, savedVerifier);
+          if (newState === savedState) {
+            const token = await getAccessToken(clientId, code, redirectUrl, savedVerifier);
+            console.log('[token]', token);
+          }
+        }
+
+        document.getElementById('auth').addEventListener('click', event => {
+          console.log('[auth.clicked]', event);
+
+          const authorizeUrl = constructAuthorizeUrl();
+          console.log('authorize URL', authorizeUrl);
+          document.cookie = `${state}&${verifier}; max-age=3600`;
+          console.log('[cookie]', document.cookie, state);
+          window.location.href = authorizeUrl;
+        });
+      });
+
+      function constructAuthorizeUrl() {
+        let url = 'https://twitter.com/i/oauth2/authorize';
+        url += '?response_type=code';
+        url += `&client_id=${clientId}`;
+        url += `&redirect_uri=${redirectUrl}`;
+        url += '&scope=tweet.read tweet.write users.read';
+        url += `&state=${state}`;
+        url += `&code_challenge=${verifier}`;
+        url += '&code_challenge_method=plain';
+        return encodeURI(url);
+      }
+
+      async function getAccessToken(clientId, code, redirectUrl, verifier) {
+        const url = 'https://cjsn785yed.execute-api.ap-northeast-1.amazonaws.com/auth';
+        console.log('[fetch]', url);
+        const response = await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify({
+            code,
+            verifier,
+          }),
+        });
+
+        if (!response.ok) {
+          throw Error('Cannot get access token.');
+        }
+
+        return await response.json();
+      }
+
+      function randomString(minDigit) {
+        let string = '';
+        while (string.length < minDigit) {
+          string += Math.random().toString(36).substring(2);
+        }
+        return string;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Serverless Twitter</h1>
+    <button id="auth">Sign in with Twitter</button>
+  </body>
+</html>
