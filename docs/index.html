@@ -36,6 +36,11 @@
           console.log('[cookie]', document.cookie, state);
           window.location.href = authorizeUrl;
         });
+
+        document.getElementById('title').addEventListener('click', event => {
+          console.log('[title clicked]', event);
+          location.href = redirectUrl
+        });
       });
 
       function constructAuthorizeUrl() {
@@ -79,7 +84,7 @@
     </script>
   </head>
   <body>
-    <a href="/"><h1>Serverless Twitter</h1></a>
+    <h1 id="title">Serverless Twitter</h1>
     <button id="auth">Sign in with Twitter</button>
   </body>
 </html>
