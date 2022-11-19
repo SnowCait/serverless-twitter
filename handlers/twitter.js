@@ -5,7 +5,7 @@ const region = 'ap-northeast-1';
 const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
 const secretsManager = new SecretsManagerClient({ region });
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
 const dynamoDB = new DynamoDBClient({ region });
 const db = DynamoDBDocumentClient.from(dynamoDB);
 
@@ -59,5 +59,38 @@ module.exports.auth = async event => {
   return {
     statusCode: 200,
     body: JSON.stringify({ ...token, ...me }),
+  };
+};
+
+module.exports.tweet = async event => {
+  const { userId, accessToken, text } = JSON.parse(event.body);
+
+  const user = await db.send(new GetCommand({
+    TableName: process.env.users_table,
+    Key: {
+      userId,
+    },
+  }));
+
+  if (accessToken !== user.accessToken) {
+    console.log('[auth failed]', `${accessToken} doesn't match ${user.accessToken}`);
+    return {
+      statusCode: 401,
+    }
+  }
+
+  const response = await fetch('https://api.twitter.com/2/tweets', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      text,
+    }),
+  });
+
+  return {
+    statusCode: 200,
+    body: await response.text(),
   };
 };

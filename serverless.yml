@@ -12,6 +12,8 @@ provider:
   architecture: arm64
   environment:
     NODE_OPTIONS: --experimental-fetch
+    users_table:
+      Ref: UsersTable
   httpApi:
     cors: true
   iam:
@@ -39,13 +41,16 @@ functions:
   auth:
     handler: handlers/twitter.auth
     memorySize: 256
-    environment:
-      users_table:
-        Ref: UsersTable
     events:
       - httpApi:
           method: POST
           path: /auth
+  tweet:
+    handler: handlers/twitter.tweet
+    events:
+      - httpApi:
+          method: POST
+          path: /tweet
 
 resources:
   Resources:
