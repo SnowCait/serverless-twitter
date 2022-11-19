@@ -48,6 +48,7 @@ functions:
           path: /auth
   tweet:
     handler: handlers/twitter.tweet
+    memorySize: 256
     environment:
       NODE_OPTIONS: --experimental-fetch
     events:
