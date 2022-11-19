@@ -58,6 +58,7 @@
           body: JSON.stringify({
             code,
             verifier,
+            redirectUrl,
           }),
         });
 
@@ -78,7 +79,7 @@
     </script>
   </head>
   <body>
-    <h1>Serverless Twitter</h1>
+    <a href="/"><h1>Serverless Twitter</h1></a>
     <button id="auth">Sign in with Twitter</button>
   </body>
 </html>
