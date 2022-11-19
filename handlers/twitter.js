@@ -9,8 +9,8 @@ module.exports.auth = async event => {
 
   const command = new GetSecretValueCommand({ SecretId: 'TwitterClientSecret' });
   const secrets = await secretsManager.send(command);
-  console.log('[secrets]', secrets);
 
+  // Access Token
   const url = 'https://api.twitter.com/2/oauth2/token';
   const clientId = 'NnduMzZ5bnk4T1RfT21BdkJlZUg6MTpjaQ';
   const { TWITTER_CLIENT_SECRET: clientSecret } = JSON.parse(secrets.SecretString);
@@ -27,11 +27,22 @@ module.exports.auth = async event => {
       code_verifier: verifier,
     }),
   });
+  const token = await response.json();
+  const { access_token: accessToken } = token;
 
-  const json = await response.text();
-  console.log('[json]', json);
+  // Me
+  const meResponse = await fetch('https://api.twitter.com/2/users/me', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+
+  const me = await meResponse.json();
+  console.log('[me]', me);
+
   return {
     statusCode: 200,
-    body: json,
+    body: JSON.stringify(token),
   };
 };
