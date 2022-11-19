@@ -37,9 +37,12 @@
           console.log('[tweet.submitted]', event);
 
           event.preventDefault();
+          const submitter = event.submitter;
+          submitter.disabled = true;
 
           if (!userId || !accessToken) {
             console.error('[unauthorized]', userId, accessToken);
+            event.submitter.disabled = false;
             return;
           }
 
@@ -57,12 +60,14 @@
 
           if (!response.ok) {
             console.error('[tweet failed]', response);
+            submitter.disabled = false;
             return;
           }
 
           console.log('[tweeted]', response);
 
           form.reset();
+          submitter.disabled = false;
         });
 
         const params = new URLSearchParams(location.search);
