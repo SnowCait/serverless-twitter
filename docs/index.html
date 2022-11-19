@@ -4,12 +4,16 @@
     <meta charset="utf-8">
     <title>Serverless Twitter</title>
     <script defer>
+      const apiUrl = 'https://cjsn785yed.execute-api.ap-northeast-1.amazonaws.com';
       const clientId = 'NnduMzZ5bnk4T1RfT21BdkJlZUg6MTpjaQ';
       const redirectUrl = location.origin + location.pathname;
       const state = randomString(10);
       const verifier = randomString(43);
       console.log('[redirect URL]', redirectUrl);
       console.log('[verifier]', verifier);
+
+      let userId;
+      let accessToken;
 
       window.addEventListener('DOMContentLoaded', async event => {
         console.log('[DOMContentLoaded]')
@@ -29,6 +33,38 @@
           window.location.href = authorizeUrl;
         });
 
+        document.getElementById('tweet').addEventListener('submit', async event => {
+          console.log('[tweet.submitted]', event);
+
+          event.preventDefault();
+
+          if (!userId || !accessToken) {
+            console.error('[unauthorized]', userId, accessToken);
+            return;
+          }
+
+          const form = event.target;
+          const text = form.elements.text.value;
+
+          const response = await fetch(`${apiUrl}/tweet`, {
+            method: 'POST',
+            body: JSON.stringify({
+              userId,
+              accessToken,
+              text,
+            }),
+          });
+
+          if (!response.ok) {
+            console.error('[tweet failed]', response);
+            return;
+          }
+
+          console.log('[tweeted]', response);
+
+          form.reset();
+        });
+
         const params = new URLSearchParams(location.search);
         const newState = params.get('state');
         const code = params.get('code');
@@ -38,8 +74,10 @@
           const [ savedState, savedVerifier ] = document.cookie.split('&');
           console.log('[cookie]', document.cookie, savedState, savedVerifier);
           if (newState === savedState) {
-            const token = await getAccessToken(clientId, code, redirectUrl, savedVerifier);
-            console.log('[token]', token);
+            const user = await getAccessToken(clientId, code, redirectUrl, savedVerifier);
+            console.log('[token]', user);
+            userId = user.id;
+            accessToken = user.access_token;
           }
         }
       });
@@ -57,7 +95,7 @@
       }
 
       async function getAccessToken(clientId, code, redirectUrl, verifier) {
-        const url = 'https://cjsn785yed.execute-api.ap-northeast-1.amazonaws.com/auth';
+        const url = `${apiUrl}/auth`;
         console.log('[fetch]', url);
         const response = await fetch(url, {
           method: 'POST',
@@ -87,5 +125,9 @@
   <body>
     <h1 id="title">Serverless Twitter</h1>
     <button id="auth">Sign in with Twitter</button>
+    <form id="tweet">
+      <input type="text" placeholder="いまどうしてる？" name="text" required>
+      <input type="submit" value="Tweet">
+    </form>
   </body>
 </html>
