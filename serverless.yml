@@ -25,6 +25,8 @@ functions:
   hello:
     handler: handlers/public.hello
     runtime: nodejs18.x
+    environment:
+      NODE_OPTIONS: --experimental-fetch
     events:
       - httpApi:
           method: POST
