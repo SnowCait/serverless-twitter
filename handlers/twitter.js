@@ -5,7 +5,7 @@ const region = 'ap-northeast-1';
 const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
 const secretsManager = new SecretsManagerClient({ region });
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, PutCommand } = require('@aws-sdk/lib-dynamodb');
 const dynamoDB = new DynamoDBClient({ region });
 const db = DynamoDBDocumentClient.from(dynamoDB);
 
@@ -48,13 +48,13 @@ module.exports.auth = async event => {
   console.log('[me]', me);
 
   // Save
-  await db.put({
+  await db.send(new PutCommand({
     TableName: process.env.users_table,
     Item: {
       userId: me.id,
       accessToken,
     },
-  });
+  }));
 
   return {
     statusCode: 200,
