@@ -4,7 +4,7 @@
 const region = 'ap-northeast-1';
 const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
 const secretsManager = new SecretsManagerClient({ region });
-const { DynamoDBClient } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
 const dynamoDB = new DynamoDBClient({ region });
 const db = DynamoDBDocumentClient.from(dynamoDB);
