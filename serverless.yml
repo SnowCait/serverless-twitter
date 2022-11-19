@@ -37,8 +37,19 @@ functions:
           method: POST
           path: /auth
 
-# resources:
-#   Resources:
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-users-${sls:stage}
+        AttributeDefinitions:
+          - AttributeName: userId # Twitter user ID
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
 #     # Cognito User Pool
 #     CognitoUserPool:
 #       Type: AWS::Cognito::UserPool
