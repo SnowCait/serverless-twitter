@@ -5,7 +5,7 @@
     <title>Serverless Twitter</title>
     <script defer>
       const clientId = 'NnduMzZ5bnk4T1RfT21BdkJlZUg6MTpjaQ';
-      const redirectUrl = location.href;
+      const redirectUrl = location.origin + location.pathname;
       const state = randomString(10);
       const verifier = randomString(43);
       console.log('[redirect URL]', redirectUrl);
