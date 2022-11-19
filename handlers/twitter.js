@@ -69,7 +69,7 @@ module.exports.tweet = async event => {
 
   const { userId, accessToken, text } = JSON.parse(event.body);
 
-  const user = await db.send(new GetCommand({
+  const { Item: user } = await db.send(new GetCommand({
     TableName: process.env.users_table,
     Key: {
       userId,
