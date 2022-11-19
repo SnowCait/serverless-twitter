@@ -81,20 +81,21 @@ module.exports.tweet = async event => {
     console.log('[user not found]', `${userId} doesn't exist`);
     return {
       statusCode: 401,
-    }
+    };
   }
 
   if (accessToken !== user.accessToken) {
     console.log('[auth failed]', `${accessToken} doesn't match ${user.accessToken}`);
     return {
       statusCode: 401,
-    }
+    };
   }
 
   const response = await fetch('https://api.twitter.com/2/tweets', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       text,
