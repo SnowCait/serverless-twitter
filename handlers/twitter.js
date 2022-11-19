@@ -102,8 +102,18 @@ module.exports.tweet = async event => {
     }),
   });
 
+  const json = await response.text();
+
+  if (!response.ok) {
+    console.log('[tweet failed]', json);
+    return {
+      statusCode: 400,
+      body: json,
+    };
+  }
+
   return {
     statusCode: 200,
-    body: await response.text(),
+    body: json,
   };
 };
