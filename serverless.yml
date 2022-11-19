@@ -38,6 +38,7 @@ functions:
           path: /hello
   auth:
     handler: handlers/twitter.auth
+    memorySize: 256
     environment:
       users_table:
         Ref: UsersTable
