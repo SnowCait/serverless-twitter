@@ -1,19 +1,17 @@
 'use strict';
 
 const https = require('https');
-const AWS = require('aws-sdk');
-const secretsManager = new AWS.SecretsManager({
-  region: 'ap-northeast-1',
-});
+// TODO: Replace to https://docs.aws.amazon.com/ja_jp/secretsmanager/latest/userguide/retrieving-secrets_lambda.html
+import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
+const secretsManager = new SecretsManagerClient({ region: 'ap-northeast-1' });
 
 module.exports.auth = async event => {
   return new Promise(async (resolve, reject) => {
     const { code, verifier, redirectUrl } = JSON.parse(event.body);
 
-    const secret_name = "TwitterClientSecret";
-    const response = await secretsManager.getSecretValue({
-      SecretId: secret_name,
-    }).promise();
+    const command = new GetSecretValueCommand({ SecretId: 'TwitterClientSecret' });
+    const response = await secretsManager.send(command);
+    console.log('[secrets]', response);
 
     const url = 'https://api.twitter.com/2/oauth2/token';
     const clientId = 'NnduMzZ5bnk4T1RfT21BdkJlZUg6MTpjaQ';
