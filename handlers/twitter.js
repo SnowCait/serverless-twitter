@@ -55,7 +55,11 @@ module.exports.auth = async event => {
   });
   console.log('[put]', putItemCommand);
   console.log('[db]', db);
-  await db.send(putItemCommand);
+  try {
+    await db.send(putItemCommand);
+  } catch (error) {
+    console.log(error.$$metadata);
+  }
 
   return {
     statusCode: 200,
