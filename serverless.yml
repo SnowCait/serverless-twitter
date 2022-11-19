@@ -22,6 +22,12 @@ provider:
             - secretsmanager:GetSecretValue
           Resource:
             - '*'
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+          Resource:
+            - Fn::GetAtt: [ UsersTable, Arn ]
 
 functions:
   hello:
