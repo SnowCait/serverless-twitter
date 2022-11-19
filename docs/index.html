@@ -13,6 +13,22 @@
 
       window.addEventListener('DOMContentLoaded', async event => {
         console.log('[DOMContentLoaded]')
+
+        document.getElementById('title').addEventListener('click', event => {
+          console.log('[title clicked]', event);
+          location.href = redirectUrl
+        });
+
+        document.getElementById('auth').addEventListener('click', event => {
+          console.log('[auth.clicked]', event);
+
+          const authorizeUrl = constructAuthorizeUrl();
+          console.log('authorize URL', authorizeUrl);
+          document.cookie = `${state}&${verifier}; max-age=3600`;
+          console.log('[cookie]', document.cookie, state);
+          window.location.href = authorizeUrl;
+        });
+
         const params = new URLSearchParams(location.search);
         const newState = params.get('state');
         const code = params.get('code');
@@ -26,21 +42,6 @@
             console.log('[token]', token);
           }
         }
-
-        document.getElementById('auth').addEventListener('click', event => {
-          console.log('[auth.clicked]', event);
-
-          const authorizeUrl = constructAuthorizeUrl();
-          console.log('authorize URL', authorizeUrl);
-          document.cookie = `${state}&${verifier}; max-age=3600`;
-          console.log('[cookie]', document.cookie, state);
-          window.location.href = authorizeUrl;
-        });
-
-        document.getElementById('title').addEventListener('click', event => {
-          console.log('[title clicked]', event);
-          location.href = redirectUrl
-        });
       });
 
       function constructAuthorizeUrl() {

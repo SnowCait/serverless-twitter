@@ -7,9 +7,11 @@ frameworkVersion: '3'
 provider:
   name: aws
   region: ap-northeast-1
-  runtime: nodejs16.x
+  runtime: nodejs18.x
   memorySize: 128
   architecture: arm64
+  environment:
+    NODE_OPTIONS: --experimental-fetch
   httpApi:
     cors: true
   iam:
@@ -24,18 +26,15 @@ provider:
 functions:
   hello:
     handler: handlers/public.hello
-    runtime: nodejs18.x
-    environment:
-      NODE_OPTIONS: --experimental-fetch
     events:
       - httpApi:
-          method: POST
+          method: GET
           path: /hello
   auth:
     handler: handlers/twitter.auth
     events:
       - httpApi:
-          method: GET
+          method: POST
           path: /auth
 
 # resources:
