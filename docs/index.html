@@ -5,9 +5,10 @@
     <title>Serverless Twitter</title>
     <script defer>
       const clientId = 'NnduMzZ5bnk4T1RfT21BdkJlZUg6MTpjaQ';
-      const redirectUrl = 'http://localhost/';
+      const redirectUrl = location.href;
       const state = randomString(10);
       const verifier = randomString(43);
+      console.log('[redirect URL]', redirectUrl);
       console.log('[verifier]', verifier);
 
       window.addEventListener('DOMContentLoaded', async event => {
