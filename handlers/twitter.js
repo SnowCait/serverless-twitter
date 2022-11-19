@@ -38,11 +38,11 @@ module.exports.auth = async event => {
     },
   });
 
-  const me = await meResponse.json();
+  const { data: me } = await meResponse.json();
   console.log('[me]', me);
 
   return {
     statusCode: 200,
-    body: JSON.stringify(token),
+    body: JSON.stringify({ ...token, ...me }),
   };
 };
