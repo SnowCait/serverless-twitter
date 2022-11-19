@@ -53,6 +53,7 @@ module.exports.auth = async event => {
       accessToken,
     },
   });
+  console.log('[put]', putItemCommand);
   await db.send(putItemCommand);
 
   return {
