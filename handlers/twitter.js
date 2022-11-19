@@ -58,7 +58,7 @@ module.exports.auth = async event => {
   try {
     await db.send(putItemCommand);
   } catch (error) {
-    console.log(error.$$metadata);
+    console.log(error);
   }
 
   return {
