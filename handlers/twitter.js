@@ -6,23 +6,6 @@ const secretsManager = new AWS.SecretsManager({
   region: 'ap-northeast-1',
 });
 
-module.exports.hello = async (event) => {
-  console.log(event);
-  console.log(process);
-  console.log(process.moduleLoadList);
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v3.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
-};
-
 module.exports.auth = async event => {
   return new Promise(async (resolve, reject) => {
     const { code, verifier, redirectUrl } = JSON.parse(event.body);

@@ -23,13 +23,14 @@ provider:
 
 functions:
   hello:
-    handler: handler.hello
+    handler: handlers/public.hello
+    runtime: nodejs18.x
     events:
       - httpApi:
           method: POST
           path: /hello
   auth:
-    handler: handler.auth
+    handler: handlers/twitter.auth
     events:
       - httpApi:
           method: GET
