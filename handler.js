@@ -1,7 +1,6 @@
 'use strict';
 
 const https = require('https');
-const fetch = require('node-fetch');
 const AWS = require('aws-sdk');
 const secretsManager = new AWS.SecretsManager({
   region: 'ap-northeast-1',
