@@ -77,6 +77,13 @@ module.exports.tweet = async event => {
   }));
   console.log('[user]', user);
 
+  if (!user) {
+    console.log('[user not found]', `${userId} doesn't exist`);
+    return {
+      statusCode: 401,
+    }
+  }
+
   if (accessToken !== user.accessToken) {
     console.log('[auth failed]', `${accessToken} doesn't match ${user.accessToken}`);
     return {
