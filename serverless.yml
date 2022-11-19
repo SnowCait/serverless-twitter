@@ -28,13 +28,13 @@ functions:
     handler: handlers/public.hello
     events:
       - httpApi:
-          method: POST
+          method: GET
           path: /hello
   auth:
     handler: handlers/twitter.auth
     events:
       - httpApi:
-          method: GET
+          method: POST
           path: /auth
 
 # resources:
