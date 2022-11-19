@@ -75,6 +75,7 @@ module.exports.tweet = async event => {
       userId,
     },
   }));
+  console.log('[user]', user);
 
   if (accessToken !== user.accessToken) {
     console.log('[auth failed]', `${accessToken} doesn't match ${user.accessToken}`);
