@@ -38,6 +38,9 @@ functions:
           path: /hello
   auth:
     handler: handlers/twitter.auth
+    environment:
+      users_table:
+        Ref: UsersTable
     events:
       - httpApi:
           method: POST

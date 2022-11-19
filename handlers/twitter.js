@@ -1,14 +1,17 @@
 'use strict';
 
 // TODO: Replace to https://docs.aws.amazon.com/ja_jp/secretsmanager/latest/userguide/retrieving-secrets_lambda.html
+const region = 'ap-northeast-1';
 const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
-const secretsManager = new SecretsManagerClient({ region: 'ap-northeast-1' });
+const secretsManager = new SecretsManagerClient({ region });
+const { DynamoDBClient, PutItemCommand } = require('@aws-sdk/client-dynamodb');
+const db = new DynamoDBClient({ region });
 
 module.exports.auth = async event => {
   const { code, verifier, redirectUrl } = JSON.parse(event.body);
 
-  const command = new GetSecretValueCommand({ SecretId: 'TwitterClientSecret' });
-  const secrets = await secretsManager.send(command);
+  const getSecretValueCommand = new GetSecretValueCommand({ SecretId: 'TwitterClientSecret' });
+  const secrets = await secretsManager.send(getSecretValueCommand);
 
   // Access Token
   const url = 'https://api.twitter.com/2/oauth2/token';
@@ -27,6 +30,7 @@ module.exports.auth = async event => {
       code_verifier: verifier,
     }),
   });
+
   const token = await response.json();
   const { access_token: accessToken } = token;
 
@@ -40,6 +44,16 @@ module.exports.auth = async event => {
 
   const { data: me } = await meResponse.json();
   console.log('[me]', me);
+
+  // Save
+  const putItemCommand = new PutItemCommand({
+    TableName: process.env.users_table,
+    Item: {
+      userId: me.id,
+      accessToken,
+    },
+  });
+  await db.send(putItemCommand);
 
   return {
     statusCode: 200,
