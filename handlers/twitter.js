@@ -30,8 +30,8 @@ module.exports.auth = async event => {
 
   const json = await response.text();
   console.log('[json]', json);
-  resolve({
+  return {
     statusCode: 200,
     body: json,
-  });
+  };
 };
