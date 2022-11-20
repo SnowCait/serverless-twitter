@@ -69,6 +69,7 @@ module.exports.tweet = async event => {
 
   const { userId, accessToken, text } = JSON.parse(event.body);
 
+  // Auth (TODO: Commonize)
   const { Item: user } = await db.send(new GetCommand({
     TableName: process.env.users_table,
     Key: {
@@ -91,6 +92,17 @@ module.exports.tweet = async event => {
     };
   }
 
+  // Save
+  await db.send(new PutCommand({
+    TableName: process.env.tweets_table,
+    Item: {
+      twitterUserId: userId,
+      createdAt: Date.now(),
+      text,
+    },
+  }));
+
+  // Save to Twitter
   const response = await fetch('https://api.twitter.com/2/tweets', {
     method: 'POST',
     headers: {
