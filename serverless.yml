@@ -68,7 +68,7 @@ resources:
           - AttributeName: twitterUserId
             AttributeType: S
         KeySchema:
-          - AttributeName: twitterUserId
+          - AttributeName: userId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 #     # Cognito User Pool
