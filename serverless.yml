@@ -18,6 +18,11 @@ provider:
       Ref: TweetsTable
   httpApi:
     cors: true
+    authorizers:
+      twitterAuthorizer:
+        type: request
+        functionName: authorizer
+        enableSimpleResponses: true
   iam:
     role:
       statements:
@@ -35,6 +40,8 @@ provider:
             - Fn::GetAtt: [ TweetsTable, Arn ]
 
 functions:
+  authorizer:
+    handler: handlers/twitter.authorizer
   hello:
     handler: handlers/public.hello
     events:
@@ -59,6 +66,8 @@ functions:
       - httpApi:
           method: POST
           path: /tweet
+          authorizer:
+            name: twitterAuthorizer
 
 resources:
   Resources:

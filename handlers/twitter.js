@@ -9,6 +9,24 @@ const { DynamoDBDocumentClient, GetCommand, PutCommand } = require('@aws-sdk/lib
 const dynamoDB = new DynamoDBClient({ region });
 const db = DynamoDBDocumentClient.from(dynamoDB);
 
+module.exports.authorizer = async event => {
+  console.log('[event]', event);
+
+  const { userId, accessToken } = JSON.parse(event.body);
+
+  const { Item: user } = await db.send(new GetCommand({
+    TableName: process.env.users_table,
+    Key: {
+      twitterUserId: userId,
+    },
+  }));
+  console.log('[user]', user);
+
+  return {
+    isAuthorized: accessToken === user?.accessToken,
+  }
+};
+
 module.exports.auth = async event => {
   console.log('[event]', event);
 
