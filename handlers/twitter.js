@@ -129,3 +129,23 @@ module.exports.tweet = async event => {
     // body: json,
   };
 };
+
+module.exports.timeline = async event => {
+  console.log('[event]', event);
+
+  const { userId } = event.requestContext.authorizer.lambda;
+
+  // Save
+  const res = await db.send(new GetCommand({
+    TableName: process.env.tweets_table,
+    Key: {
+      twitterUserId: userId,
+    },
+  }));
+  console.log('[res]', res);
+
+  return {
+    statusCode: 200,
+    // body: json,
+  };
+};

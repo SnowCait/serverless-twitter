@@ -71,6 +71,17 @@ functions:
           path: /tweet
           authorizer:
             name: twitterAuthorizer
+  timeline:
+    handler: handlers/twitter.timeline
+    memorySize: 256
+    environment:
+      NODE_OPTIONS: --experimental-fetch
+    events:
+      - httpApi:
+          method: GET
+          path: /timeline
+          authorizer:
+            name: twitterAuthorizer
 
 resources:
   Resources:
