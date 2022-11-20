@@ -64,6 +64,9 @@
 
           const response = await fetch(`${apiUrl}/tweet`, {
             method: 'POST',
+            headers: {
+              'Authorization': `${userId}:${accessToken}`,
+            },
             body: JSON.stringify({
               userId,
               accessToken,

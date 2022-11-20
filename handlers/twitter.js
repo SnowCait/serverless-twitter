@@ -12,7 +12,7 @@ const db = DynamoDBDocumentClient.from(dynamoDB);
 module.exports.authorizer = async event => {
   console.log('[event]', event);
 
-  const { userId, accessToken } = JSON.parse(event.body);
+  const [ userId, accessToken ] = event.headers.authorization.split(':');
 
   const { Item: user } = await db.send(new GetCommand({
     TableName: process.env.users_table,
