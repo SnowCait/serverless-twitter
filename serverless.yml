@@ -3,7 +3,7 @@ app: serverless-twitter
 service: serverless-twitter
 
 frameworkVersion: '3'
-# configValidationMode: error
+configValidationMode: warn
 
 provider:
   name: aws
