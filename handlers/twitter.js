@@ -136,7 +136,7 @@ module.exports.timeline = async event => {
   const { userId } = event.requestContext.authorizer.lambda;
 
   // Save
-  const { Items: timeline } = await db.send(new QueryCommand({
+  const { Items: timeline, Count: count, ScannedCount: scannedCount } = await db.send(new QueryCommand({
     TableName: process.env.tweets_table,
     KeyConditionExpression: 'twitterUserId = :twitterUserId',
     ExpressionAttributeValues: {
@@ -145,7 +145,7 @@ module.exports.timeline = async event => {
     ScanIndexForward: false,
     Limit: 5,
   }));
-  console.log('[timeline]', timeline);
+  console.log('[timeline]', timeline, count, scannedCount);
 
   return {
     statusCode: 200,
