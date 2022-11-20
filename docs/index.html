@@ -37,9 +37,9 @@
           console.log('[cookie]', document.cookie, state);
           window.location.href = authorizeUrl;
         });
-        if (localStorage.getItem('user')) {
-          signin.disabled = true;
-        }
+        // if (localStorage.getItem('user')) {
+        //   signin.disabled = true;
+        // }
 
         document.getElementById('tweet').addEventListener('submit', async event => {
           console.log('[tweet.submitted]', event);
