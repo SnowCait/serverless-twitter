@@ -88,9 +88,9 @@ module.exports.auth = async event => {
 
 module.exports.tweet = async event => {
   console.log('[event]', event);
-  console.log('[authorizer]', event.requestContext.authorizer);
 
-  const { userId, accessToken, text } = JSON.parse(event.body);
+  const { userId } = event.requestContext.authorizer.lambda;
+  const { text } = JSON.parse(event.body);
 
   // Save
   await db.send(new PutCommand({
