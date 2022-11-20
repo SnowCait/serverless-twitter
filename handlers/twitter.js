@@ -24,6 +24,10 @@ module.exports.authorizer = async event => {
 
   return {
     isAuthorized: accessToken === user?.accessToken,
+    context: {
+      userId,
+      accessToken,
+    },
   }
 };
 
@@ -86,29 +90,6 @@ module.exports.tweet = async event => {
   console.log('[event]', event);
 
   const { userId, accessToken, text } = JSON.parse(event.body);
-
-  // Auth (TODO: Commonize)
-  const { Item: user } = await db.send(new GetCommand({
-    TableName: process.env.users_table,
-    Key: {
-      twitterUserId: userId,
-    },
-  }));
-  console.log('[user]', user);
-
-  if (!user) {
-    console.log('[user not found]', `${userId} doesn't exist`);
-    return {
-      statusCode: 401,
-    };
-  }
-
-  if (accessToken !== user.accessToken) {
-    console.log('[auth failed]', `${accessToken} doesn't match ${user.accessToken}`);
-    return {
-      statusCode: 401,
-    };
-  }
 
   // Save
   await db.send(new PutCommand({
