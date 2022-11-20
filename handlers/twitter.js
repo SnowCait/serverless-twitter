@@ -142,6 +142,8 @@ module.exports.timeline = async event => {
     ExpressionAttributeValues: {
       ':twitterUserId': userId,
     },
+    ScanIndexForward: false,
+    Limit: 5,
   }));
   console.log('[timeline]', timeline);
 
