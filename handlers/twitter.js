@@ -88,6 +88,7 @@ module.exports.auth = async event => {
 
 module.exports.tweet = async event => {
   console.log('[event]', event);
+  console.log('[authorizer]', event.requestContext.authorizer);
 
   const { userId, accessToken, text } = JSON.parse(event.body);
 
@@ -113,18 +114,18 @@ module.exports.tweet = async event => {
   //   }),
   // });
 
-  const json = await response.text();
+  // const json = await response.text();
 
-  if (!response.ok) {
-    console.log('[tweet failed]', json);
-    return {
-      statusCode: 400,
-      body: json,
-    };
-  }
+  // if (!response.ok) {
+  //   console.log('[tweet failed]', json);
+  //   return {
+  //     statusCode: 400,
+  //     body: json,
+  //   };
+  // }
 
   return {
     statusCode: 200,
-    body: json,
+    // body: json,
   };
 };
