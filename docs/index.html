@@ -12,9 +12,6 @@
       console.log('[redirect URL]', redirectUrl);
       console.log('[verifier]', verifier);
 
-      let userId;
-      let accessToken;
-
       window.addEventListener('DOMContentLoaded', async event => {
         console.log('[DOMContentLoaded]')
 
@@ -40,11 +37,16 @@
           const submitter = event.submitter;
           submitter.disabled = true;
 
-          if (!userId || !accessToken) {
-            console.error('[unauthorized]', userId, accessToken);
+          const user = localStorage.getItem('user');
+          console.log('[user]', user);
+
+          if (!user) {
+            console.error('[unauthorized]');
             event.submitter.disabled = false;
             return;
           }
+
+          const { userId, accessToken } = JSON.parse(user);
 
           const form = event.target;
           const text = form.elements.text.value;
@@ -81,8 +83,7 @@
           if (newState === savedState) {
             const user = await getAccessToken(clientId, code, redirectUrl, savedVerifier);
             console.log('[token]', user);
-            userId = user.id;
-            accessToken = user.access_token;
+            localStorage.setItem('user', JSON.stringify(user));
           }
         }
       });
