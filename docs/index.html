@@ -20,8 +20,9 @@
           location.href = redirectUrl
         });
 
-        document.getElementById('auth').addEventListener('click', event => {
-          console.log('[auth.clicked]', event);
+        const signin = document.getElementById('signin');
+        signin.addEventListener('click', event => {
+          console.log('[signin.clicked]', event);
 
           const authorizeUrl = constructAuthorizeUrl();
           console.log('authorize URL', authorizeUrl);
@@ -29,6 +30,9 @@
           console.log('[cookie]', document.cookie, state);
           window.location.href = authorizeUrl;
         });
+        if (localStorage.getItem('user')) {
+          signin.disabled = true;
+        }
 
         document.getElementById('tweet').addEventListener('submit', async event => {
           console.log('[tweet.submitted]', event);
@@ -130,7 +134,7 @@
   </head>
   <body>
     <h1 id="title">Serverless Twitter</h1>
-    <button id="auth">Sign in with Twitter</button>
+    <button id="signin">Sign in with Twitter</button>
     <form id="tweet">
       <input type="text" placeholder="いまどうしてる？" name="text" required>
       <input type="submit" value="Tweet">
