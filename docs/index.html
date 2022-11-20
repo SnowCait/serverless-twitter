@@ -20,7 +20,9 @@
       console.log('[verifier]', verifier);
 
       window.addEventListener('DOMContentLoaded', async event => {
-        console.log('[DOMContentLoaded]')
+        console.log('[DOMContentLoaded]');
+
+        const authorized = !!localStorage.getItem('user');
 
         document.getElementById('title').addEventListener('click', event => {
           console.log('[title clicked]', event);
@@ -37,9 +39,6 @@
           console.log('[cookie]', document.cookie, state);
           window.location.href = authorizeUrl;
         });
-        // if (localStorage.getItem('user')) {
-        //   signin.disabled = true;
-        // }
 
         document.getElementById('tweet').addEventListener('submit', async event => {
           console.log('[tweet.submitted]', event);
@@ -98,6 +97,10 @@
             localStorage.setItem('user', JSON.stringify(user));
           }
         }
+
+        if (authorized) {
+          await getTimeline();
+        }
       });
 
       function constructAuthorizeUrl() {
@@ -131,6 +134,28 @@
         return await response.json();
       }
 
+      async function getTimeline() {
+        const user = localStorage.getItem('user');
+        const { id: userId, access_token: accessToken } = JSON.parse(user);
+
+        const response = await fetch(`${apiUrl}/timeline`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `${userId}:${accessToken}`,
+          },
+        });
+
+        const timeline = await response.json();
+        console.log('[timeline]', timeline);
+        const list = document.getElementById('timeline');
+        for (const tweet of timeline) {
+          console.log(tweet);
+          const li = document.createElement('li');
+          li.textContent = `${tweet.twitterUserId}: ${tweet.text}`;
+          list.appendChild(li);
+        }
+      }
+
       function randomString(minDigit) {
         let string = '';
         while (string.length < minDigit) {
@@ -147,5 +172,6 @@
       <textarea placeholder="いまどうしてる？" name="text" required></textarea>
       <input type="submit" value="Tweet">
     </form>
+    <ol id="timeline"></ol>
   </body>
 </html>
