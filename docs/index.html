@@ -81,6 +81,11 @@
 
           form.reset();
           submitter.disabled = false;
+
+          const list = document.getElementById('timeline');
+          const li = document.createElement('li');
+          li.textContent = `${userId}: ${text}`;
+          list.insertBefore(li, list.firstChild);
         });
 
         const params = new URLSearchParams(location.search);
