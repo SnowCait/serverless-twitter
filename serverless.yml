@@ -63,13 +63,16 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:service}-users-${sls:stage}
-        BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: twitterUserId
             AttributeType: S
         KeySchema:
           - AttributeName: twitterUserId
             KeyType: HASH
+        BillingMode: PROVISIONED
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 #     # Cognito User Pool
 #     CognitoUserPool:
 #       Type: AWS::Cognito::UserPool
