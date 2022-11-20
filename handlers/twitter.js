@@ -120,17 +120,17 @@ module.exports.tweet = async event => {
     },
   }));
 
-  // Save to Twitter
-  const response = await fetch('https://api.twitter.com/2/tweets', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      text,
-    }),
-  });
+  // // Save to Twitter
+  // const response = await fetch('https://api.twitter.com/2/tweets', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Authorization': `Bearer ${accessToken}`,
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify({
+  //     text,
+  //   }),
+  // });
 
   const json = await response.text();
 
