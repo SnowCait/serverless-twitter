@@ -23,6 +23,9 @@ provider:
         type: request
         functionName: authorizer
         enableSimpleResponses: true
+        resultTtlInSeconds: 3600
+        identitySource:
+          - $request.header.Authorization
   iam:
     role:
       statements:
