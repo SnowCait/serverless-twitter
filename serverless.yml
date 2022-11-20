@@ -63,10 +63,10 @@ resources:
       Properties:
         TableName: ${self:service}-users-${sls:stage}
         AttributeDefinitions:
-          - AttributeName: userId # Twitter user ID
+          - AttributeName: twitterUserid
             AttributeType: S
         KeySchema:
-          - AttributeName: userId
+          - AttributeName: twitterUserid
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 #     # Cognito User Pool
