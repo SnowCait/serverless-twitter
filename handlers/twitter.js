@@ -53,7 +53,7 @@ module.exports.auth = async event => {
   await db.send(new PutCommand({
     TableName: process.env.users_table,
     Item: {
-      userId: me.id,
+      twitterUserId: me.id,
       accessToken,
     },
   }));
@@ -72,7 +72,7 @@ module.exports.tweet = async event => {
   const { Item: user } = await db.send(new GetCommand({
     TableName: process.env.users_table,
     Key: {
-      userId,
+      twitterUserId: userId,
     },
   }));
   console.log('[user]', user);
