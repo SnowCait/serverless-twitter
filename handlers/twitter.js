@@ -5,7 +5,7 @@ const region = 'ap-northeast-1';
 const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
 const secretsManager = new SecretsManagerClient({ region });
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } = require('@aws-sdk/lib-dynamodb');
 const dynamoDB = new DynamoDBClient({ region });
 const db = DynamoDBDocumentClient.from(dynamoDB);
 
@@ -136,10 +136,11 @@ module.exports.timeline = async event => {
   const { userId } = event.requestContext.authorizer.lambda;
 
   // Save
-  const res = await db.send(new GetCommand({
+  const res = await db.send(new QueryCommand({
     TableName: process.env.tweets_table,
-    Key: {
-      twitterUserId: userId,
+    KeyConditionExpression: 'twitterUserId = :twitterUserId',
+    ExpressionAttributeValues: {
+      ':twitterUserId': userId,
     },
   }));
   console.log('[res]', res);
