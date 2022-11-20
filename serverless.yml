@@ -11,9 +11,9 @@ provider:
   runtime: nodejs18.x
   memorySize: 128
   architecture: arm64
-  environment:
-    users_table:
-      Ref: UsersTable
+  # environment:
+  #   users_table:
+  #     Ref: UsersTable
   httpApi:
     cors: true
   iam:
@@ -24,12 +24,12 @@ provider:
             - secretsmanager:GetSecretValue
           Resource:
             - '*'
-        - Effect: Allow
-          Action:
-            - dynamodb:GetItem
-            - dynamodb:PutItem
-          Resource:
-            - Fn::GetAtt: [ UsersTable, Arn ]
+        # - Effect: Allow
+        #   Action:
+        #     - dynamodb:GetItem
+        #     - dynamodb:PutItem
+        #   Resource:
+        #     - Fn::GetAtt: [ UsersTable, Arn ]
 
 functions:
   hello:
