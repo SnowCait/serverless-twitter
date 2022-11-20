@@ -46,7 +46,7 @@
             return;
           }
 
-          const { userId, accessToken } = JSON.parse(user);
+          const { id: userId, access_token: accessToken } = JSON.parse(user);
 
           const form = event.target;
           const text = form.elements.text.value;
