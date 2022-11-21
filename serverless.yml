@@ -9,9 +9,10 @@ provider:
   name: aws
   region: ap-northeast-1
   runtime: nodejs18.x
-  memorySize: 128
+  memorySize: 512
   architecture: arm64
   environment:
+    NODE_OPTIONS: --experimental-fetch
     users_table:
       Ref: UsersTable
     tweets_table:
@@ -54,18 +55,12 @@ functions:
           path: /hello
   auth:
     handler: handlers/twitter.auth
-    memorySize: 256
-    environment:
-      NODE_OPTIONS: --experimental-fetch
     events:
       - httpApi:
           method: POST
           path: /auth
   refresh:
     handler: handlers/twitter.refresh
-    memorySize: 256
-    environment:
-      NODE_OPTIONS: --experimental-fetch
     events:
       - httpApi:
           method: POST
@@ -74,9 +69,6 @@ functions:
             name: twitterAuthorizer
   tweet:
     handler: handlers/twitter.tweet
-    memorySize: 256
-    environment:
-      NODE_OPTIONS: --experimental-fetch
     events:
       - httpApi:
           method: POST
@@ -85,9 +77,6 @@ functions:
             name: twitterAuthorizer
   timeline:
     handler: handlers/twitter.timeline
-    memorySize: 256
-    environment:
-      NODE_OPTIONS: --experimental-fetch
     events:
       - httpApi:
           method: GET
