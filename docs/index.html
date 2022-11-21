@@ -159,7 +159,7 @@
         const token = await response.json();
         console.log('[refreshed token]', token);
         user.access_token = token.access_token;
-        localStorage.setItem('user', user);
+        localStorage.setItem('user', JSON.stringify(user));
       }
 
       async function getTimeline() {

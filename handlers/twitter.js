@@ -125,6 +125,18 @@ module.exports.refresh = async event => {
   const json = await response.text();
   console.log('[token]', json);
 
+  const { access_token: accessToken, refresh_token: refreshToken } = JSON.parse(json);
+
+  // Save
+  await db.send(new PutCommand({
+    TableName: process.env.users_table,
+    Item: {
+      twitterUserId: userId,
+      accessToken,
+      refreshToken,
+    },
+  }));
+
   return {
     statusCode: 200,
     body: json,
