@@ -104,6 +104,11 @@
         }
 
         if (authorized) {
+          const refreshButton = document.getElementById('refresh');
+          refreshButton.disabled = false;
+          refreshButton.addEventListener('click', async event => {
+            await refreshToken();
+          });
           await getTimeline();
         }
       });
@@ -113,7 +118,7 @@
         url += '?response_type=code';
         url += `&client_id=${clientId}`;
         url += `&redirect_uri=${redirectUrl}`;
-        url += '&scope=tweet.read tweet.write users.read';
+        url += '&scope=tweet.read tweet.write users.read offline.access';
         url += `&state=${state}`;
         url += `&code_challenge=${verifier}`;
         url += '&code_challenge_method=plain';
@@ -137,6 +142,24 @@
         }
 
         return await response.json();
+      }
+
+      async function refreshToken() {
+        const json = localStorage.getItem('user');
+        const user = JSON.parse(json);
+        const { id: userId, access_token: accessToken, refresh_token: refreshToken } = user;
+
+        const response = await fetch(`${apiUrl}/refresh`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `${userId}:${accessToken}`,
+          },
+        });
+
+        const token = await response.json();
+        console.log('[refreshed token]', token);
+        user.access_token = token.access_token;
+        localStorage.setItem('user', user);
       }
 
       async function getTimeline() {
@@ -173,6 +196,7 @@
   <body>
     <h1 id="title">Serverless Twitter</h1>
     <button id="signin">Sign in with Twitter</button>
+    <button id="refresh" disabled>Refresh token</button>
     <form id="tweet">
       <textarea placeholder="いまどうしてる？" name="text" required></textarea>
       <input type="submit" value="Tweet">
