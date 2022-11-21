@@ -9,7 +9,7 @@ provider:
   name: aws
   region: ap-northeast-1
   runtime: nodejs18.x
-  memorySize: 1024
+  memorySize: 128
   architecture: arm64
   environment:
     NODE_OPTIONS: --experimental-fetch
