@@ -61,6 +61,15 @@ functions:
       - httpApi:
           method: POST
           path: /auth
+  refresh:
+    handler: handlers/twitter.refresh
+    memorySize: 256
+    environment:
+      NODE_OPTIONS: --experimental-fetch
+    events:
+      - httpApi:
+          method: POST
+          path: /refresh
   tweet:
     handler: handlers/twitter.tweet
     memorySize: 256
