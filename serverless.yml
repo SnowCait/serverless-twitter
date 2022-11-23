@@ -191,3 +191,9 @@ resources:
 #                       - execute-api:Invoke
 #                     Resource:
 #                       - Ref: hello
+
+package:
+  patterns:
+    - '!docs/**'
+    - '!compose.yaml'
+    - '!**.md'
