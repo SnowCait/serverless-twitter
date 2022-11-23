@@ -100,6 +100,7 @@
             const user = await getAccessToken(clientId, code, redirectUrl, savedVerifier);
             console.log('[token]', user);
             localStorage.setItem('user', JSON.stringify(user));
+            await getTimeline();
           }
         }
 
@@ -163,6 +164,7 @@
       }
 
       async function getTimeline() {
+        console.log('[get timeline]');
         const user = localStorage.getItem('user');
         const { id: userId, access_token: accessToken } = JSON.parse(user);
 
