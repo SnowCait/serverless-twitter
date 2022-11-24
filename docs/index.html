@@ -14,15 +14,10 @@
       const apiUrl = 'https://cjsn785yed.execute-api.ap-northeast-1.amazonaws.com';
       const clientId = 'NnduMzZ5bnk4T1RfT21BdkJlZUg6MTpjaQ';
       const redirectUrl = location.origin + location.pathname;
-      const state = randomString(10);
-      const verifier = randomString(43);
       console.log('[redirect URL]', redirectUrl);
-      console.log('[verifier]', verifier);
 
       window.addEventListener('DOMContentLoaded', async event => {
         console.log('[DOMContentLoaded]');
-
-        const authorized = !!localStorage.getItem('user');
 
         document.getElementById('title').addEventListener('click', event => {
           console.log('[title clicked]', event);
@@ -33,10 +28,13 @@
         signin.addEventListener('click', event => {
           console.log('[signin.clicked]', event);
 
-          const authorizeUrl = constructAuthorizeUrl();
+          const state = randomString(10);
+          const verifier = randomString(43);
+          const authorizeUrl = constructAuthorizeUrl(state, verifier);
           console.log('authorize URL', authorizeUrl);
-          document.cookie = `${state}&${verifier}; max-age=3600`;
-          console.log('[cookie]', document.cookie, state);
+
+          sessionStorage.setItem('session', `${state}&${verifier}`);
+          console.log('[session]', sessionStorage.getItem('session'));
           window.location.href = authorizeUrl;
         });
 
@@ -94,16 +92,22 @@
         if (newState && code) {
           console.log('[params]', newState, code);
 
-          const [ savedState, savedVerifier ] = document.cookie.split('&');
-          console.log('[cookie]', document.cookie, savedState, savedVerifier);
+          const session = sessionStorage.getItem('session');
+          if (!session) {
+            throw Error("state and verifier doesn't exist.");
+          }
+
+          const [ savedState, savedVerifier ] = session.split('&');
+          sessionStorage.clear();
+          console.log('[session]', savedState, savedVerifier);
           if (newState === savedState) {
             const user = await getAccessToken(clientId, code, redirectUrl, savedVerifier);
             console.log('[token]', user);
             localStorage.setItem('user', JSON.stringify(user));
-            await getTimeline();
           }
         }
 
+        const authorized = !!localStorage.getItem('user');
         if (authorized) {
           const refreshButton = document.getElementById('refresh');
           refreshButton.disabled = false;
@@ -114,15 +118,15 @@
         }
       });
 
-      function constructAuthorizeUrl() {
-        let url = 'https://twitter.com/i/oauth2/authorize';
-        url += '?response_type=code';
-        url += `&client_id=${clientId}`;
-        url += `&redirect_uri=${redirectUrl}`;
-        url += '&scope=tweet.read tweet.write users.read offline.access';
-        url += `&state=${state}`;
-        url += `&code_challenge=${verifier}`;
-        url += '&code_challenge_method=plain';
+      function constructAuthorizeUrl(state, verifier) {
+        const url = 'https://twitter.com/i/oauth2/authorize'
+          + '?response_type=code'
+          + `&client_id=${clientId}`
+          + `&redirect_uri=${redirectUrl}`
+          + '&scope=tweet.read tweet.write users.read offline.access'
+          + `&state=${state}`
+          + `&code_challenge=${verifier}`
+          + '&code_challenge_method=plain';
         return encodeURI(url);
       }
 
